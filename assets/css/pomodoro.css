@@ -1,0 +1,521 @@
+/* نمط Pomodoro Timer المتقدم */
+
+/* واجهة ملء الشاشة */
+.pomodoro-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Tajawal', sans-serif;
+  direction: rtl;
+  overflow: hidden;
+}
+
+/* الحاوية الرئيسية */
+.pomodoro-container {
+  width: 90%;
+  max-width: 800px;
+  text-align: center;
+  color: white;
+  padding: 2rem;
+}
+
+/* الهيدر */
+.pomodoro-header h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  animation: fadeInDown 0.8s ease;
+}
+
+.pomodoro-header h2 {
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+  animation: fadeInDown 0.8s ease 0.2s both;
+}
+
+/* العداد الدائري */
+.pomodoro-timer {
+  margin: 3rem 0;
+  animation: fadeInUp 0.8s ease 0.4s both;
+}
+
+.timer-circle {
+  width: 300px;
+  height: 300px;
+  border: 8px solid rgba(255,255,255,0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 2rem;
+  position: relative;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+.timer-circle::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  right: -8px;
+  bottom: -8px;
+  border-radius: 50%;
+  border: 4px solid var(--primary-color, #4f46e5);
+  border-top-color: transparent;
+  animation: spin 4s linear infinite;
+}
+
+.timer-display {
+  font-size: 4rem;
+  font-weight: 800;
+  text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  animation: pulse 2s ease-in-out infinite alternate;
+}
+
+/* شريط التقدم */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #34d399);
+  border-radius: 4px;
+  transition: width 1s ease;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.5);
+}
+
+/* أزرار التحكم */
+.pomodoro-controls {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin: 2rem 0;
+  animation: fadeInUp 0.8s ease 0.6s both;
+}
+
+.btn-pomodoro {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  font-family: 'Tajawal', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-pomodoro::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-pomodoro:hover::before {
+  left: 100%;
+}
+
+.btn-pomodoro.pause {
+  background: rgba(16, 185, 129, 0.9);
+  color: white;
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+}
+
+.btn-pomodoro.pause:hover {
+  background: rgba(16, 185, 129, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(16, 185, 129, 0.4);
+}
+
+.btn-pomodoro.end {
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+}
+
+.btn-pomodoro.end:hover {
+  background: rgba(239, 68, 68, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(239, 68, 68, 0.4);
+}
+
+.btn-pomodoro.postpone {
+  background: rgba(245, 158, 11, 0.9);
+  color: white;
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
+}
+
+.btn-pomodoro.postpone:hover {
+  background: rgba(245, 158, 11, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(245, 158, 11, 0.4);
+}
+
+/* منطقة الملاحظات */
+.pomodoro-notes {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  animation: fadeInUp 0.8s ease 0.8s both;
+}
+
+.pomodoro-notes h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-align: right;
+}
+
+.pomodoro-notes textarea {
+  width: 100%;
+  height: 120px;
+  background: rgba(255,255,255,0.9);
+  border: none;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 1rem;
+  resize: none;
+  direction: rtl;
+  text-align: right;
+}
+
+.pomodoro-notes textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
+}
+
+/* أنشطة الراحة */
+.break-activities {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  animation: fadeInUp 0.8s ease 0.8s both;
+}
+
+.break-activities h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.activity-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.activity {
+  background: rgba(255,255,255,0.9);
+  color: #1e293b;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.activity:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+/* الإحصائيات */
+.pomodoro-stats {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+  animation: fadeInUp 0.8s ease 1s both;
+}
+
+.stat {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  padding: 1rem 1.5rem;
+  text-align: center;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+/* نافذة إكمال الجلسة */
+.pomodoro-complete-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(10px);
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.5s ease;
+}
+
+.complete-content {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 1rem;
+  padding: 3rem;
+  text-align: center;
+  color: #1e293b;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+  animation: scaleIn 0.5s ease;
+}
+
+.complete-content h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #10b981, #34d399);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.complete-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  justify-content: center;
+}
+
+.complete-actions .btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  font-family: 'Tajawal', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* زر بدء المراجعة في الجدول */
+.start-study-btn {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.start-study-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.start-study-btn:hover::before {
+  left: 100%;
+}
+
+.start-study-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+}
+
+/* عرض الوقت المباشر في homr.html */
+.live-timer-display {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(79, 70, 229, 0.95);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  animation: slideInRight 0.5s ease;
+  direction: ltr;
+}
+
+.live-timer-display .timer-phase {
+  display: block;
+  font-size: 0.8rem;
+  opacity: 0.9;
+  margin-bottom: 0.2rem;
+}
+
+.live-timer-display.break-mode {
+  background: rgba(16, 185, 129, 0.95);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+}
+
+/* تحسينات للهاتف المحمول */
+@media (max-width: 768px) {
+  .pomodoro-header h1 {
+    font-size: 2rem;
+  }
+  
+  .timer-circle {
+    width: 250px;
+    height: 250px;
+  }
+  
+  .timer-display {
+    font-size: 3rem;
+  }
+  
+  .pomodoro-controls {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .btn-pomodoro {
+    width: 100%;
+    max-width: 250px;
+  }
+  
+  .pomodoro-stats {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .complete-actions {
+    flex-direction: column;
+  }
+  
+  .complete-actions .btn {
+    width: 100%;
+  }
+  
+  .live-timer-display {
+    top: 10px;
+    right: 10px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+}
+
+/* الرسوم المتحركة */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  from { opacity: 0.8; }
+  to { opacity: 1; }
+}
+
+/* تحسينات أداء الرسوم المتحركة */
+.pomodoro-fullscreen,
+.timer-circle,
+.btn-pomodoro,
+.activity {
+  will-change: transform;
+}
+
+/* وضع الطباعة */
+@media print {
+  .pomodoro-fullscreen,
+  .pomodoro-complete-modal,
+  .live-timer-display,
+  .start-study-btn {
+    display: none !important;
+  }
+}

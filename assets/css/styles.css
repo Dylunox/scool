@@ -1,0 +1,55 @@
+/* خطوط وأساسيات */
+:root { --brand: #0d6efd; --success: #198754; --danger: #dc3545; }
+body { font-family: Tajawal, sans-serif; background-color: #f8fafc; color: #0f172a; }
+
+/* حاويات محسّنة */
+.container { max-width: 980px; }
+header { background: #ffffff; border: 1px solid #e2e8f0; border-radius: .75rem; padding: .75rem 1rem; }
+
+/* بطاقات الهاتف للجدول */
+.card-task { border: 1px solid #e2e8f0; border-radius: .75rem; padding: .85rem; background: #fff; transition: transform .2s ease, box-shadow .2s ease; }
+.card-task:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(15, 23, 42, .08); }
+.card-task .title { font-weight: 700; color: #0f172a; }
+.card-task.late { border-color: var(--danger); background: #fff5f5; }
+.card-task.completed { border-color: var(--success); background: #f3fff6; }
+.card-task.completed-anim { animation: pulseComplete .6s ease; }
+@keyframes pulseComplete { 0% { box-shadow: 0 0 0 0 rgba(25, 135, 84, .5); } 100% { box-shadow: 0 0 0 12px rgba(25, 135, 84, 0); } }
+
+/* تأثير انفجار بسيط عند الإكمال */
+.card-task.explode::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: .75rem;
+  box-shadow: 0 0 0 0 rgba(25, 135, 84, .45);
+  animation: explode 400ms ease-out forwards;
+  pointer-events: none;
+}
+@keyframes explode {
+  0% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(25,135,84,.45); }
+  100% { transform: scale(1.04); opacity: 0; box-shadow: 0 0 0 18px rgba(25,135,84,0); }
+}
+
+/* زر نجاح ناعم */
+.btn-success-soft { background: #e7f7ee; color: var(--success); border-color: #d3f0e0; }
+.btn-success-soft:hover { background: #dff4e9; }
+
+/* قائمة المواد وإدارتها */
+.list-group-item { border-color: #e2e8f0; }
+.list-group-item input.subject-name { border-radius: .5rem; }
+
+/* أزرار ناعمة */
+.btn-danger-soft { background: #ffe3e6; color: var(--danger); border-color: #f8d7da; }
+.btn-danger-soft:hover { background: #ffd6db; }
+
+/* حقول صغيرة أنيقة */
+.form-control, .form-select { border-color: #cbd5e1; }
+.form-control:focus, .form-select:focus { box-shadow: 0 0 0 .15rem rgba(13,110,253,.15); }
+
+/* طباعة جميلة */
+@media print {
+  header, .btn, .nav, .modal { display: none !important; }
+  body { color: #000; background: #fff; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { border: 1px solid #000; padding: 6px; }
+}
